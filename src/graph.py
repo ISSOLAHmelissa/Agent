@@ -11,6 +11,7 @@ Le graphe exécuté est : agent -> tools -> agent -> ... -> sortie structurée.
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import Optional, Tuple
 
 from langchain_groq import ChatGroq
@@ -21,28 +22,16 @@ from .tools import OUTILS
 
 MODELE_DEFAUT = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
-SYSTEM_PROMPT = """Tu es un assistant qui transforme des échanges d'e-mails en \
-tickets Jira prêts à l'emploi, pour une équipe francophone.
+# Dossier des prompts, à la racine du projet (à côté de src/).
+PROMPTS = Path(__file__).resolve().parent.parent / "prompts"
 
-Méthode à suivre, dans l'ordre :
-1. Lis attentivement l'intégralité du fil d'e-mails fourni.
-2. Appelle l'outil `detecter_signaux_urgence` pour identifier le niveau \
-d'urgence à partir du contenu, puis `evaluer_complexite_thread` pour estimer \
-l'effort.
-3. Rédige ensuite le ticket en français :
-   - un titre (summary) court et explicite,
-   - une description qui RÉSUME l'échange (contexte, problème/besoin, attendu) \
-sans recopier les e-mails,
-   - le type de ticket le plus adapté,
-   - la priorité (en t'appuyant sur les signaux d'urgence) avec sa \
-justification,
-   - une estimation en points (en t'appuyant sur la complexité) avec sa \
-justification,
-   - les labels, composants et critères d'acceptation déductibles,
-   - le demandeur (reporter) et une éventuelle échéance si mentionnée.
 
-Sois fidèle au contenu : n'invente pas d'informations absentes. Si un champ \
-n'est pas déductible, laisse-le vide ou null."""
+def charger_prompt(chemin_relatif: str) -> str:
+    """Charge un prompt Markdown depuis le dossier `prompts/`."""
+    return (PROMPTS / chemin_relatif).read_text(encoding="utf-8")
+
+
+SYSTEM_PROMPT = charger_prompt("use_cases/email_to_jira.md")
 
 
 def build_agent(model_name: Optional[str] = None):

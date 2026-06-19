@@ -19,14 +19,13 @@ from dotenv import load_dotenv
 
 from src.email_parser import construire_fil_emails
 from src.graph import MODELE_DEFAUT, analyser_emails
+from src.jira_client import creer_ticket_jira
 from src.schema import JiraTicket
+from src.ui_formulaire import formulaire_ticket
 
 load_dotenv()
 
 st.set_page_config(page_title="E-mails → Ticket Jira", page_icon="🎫", layout="centered")
-
-PRIORITES = ["Highest", "High", "Medium", "Low", "Lowest"]
-TYPES = ["Story", "Bug", "Task", "Epic", "Sub-task"]
 
 
 # --------------------------------------------------------------------------- #
@@ -41,7 +40,7 @@ with st.sidebar:
     else:
         st.error("GROQ_API_KEY manquante (.env)")
     st.caption(
-        "Déposez un ou plusieurs e-mails (.eml, .txt, .pdf) via le bouton **+** "
+        "Déposez un ou plusieurs e-mails Outlook (.msg, .eml, .txt) via le bouton **+** "
         "de la zone de saisie, puis **Envoyer**. Le LLM analyse l'échange et "
         "pré-remplit un ticket Jira."
     )
@@ -74,7 +73,7 @@ for role, contenu in st.session_state.messages:
 saisie = st.chat_input(
     "Décrivez le besoin ou ajoutez les e-mails en pièce jointe…",
     accept_file="multiple",
-    file_type=["eml", "msg", "txt", "md", "pdf"],
+    file_type=["msg", "eml", "txt", "md"],
 )
 
 if saisie:
@@ -130,72 +129,35 @@ if ticket is not None:
     st.divider()
     st.subheader("📝 Formulaire du ticket Jira")
 
-    with st.form("formulaire_ticket"):
-        summary = st.text_input("Résumé (titre)", value=ticket.summary)
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            issue_type = st.selectbox(
-                "Type", TYPES, index=TYPES.index(ticket.issue_type)
+    # Formulaire extrait dans un composant réutilisable (src/ui_formulaire.py).
+    ticket_final = formulaire_ticket(ticket, st.session_state.attachments)
+
+    if ticket_final is not None:
+        # --- Appel (simulé) à l'API Jira pour CRÉER le ticket --------------- #
+        with st.spinner("Création du ticket dans Jira…"):
+            resultat = creer_ticket_jira(ticket_final)
+
+        if resultat.ok:
+            st.success(
+                f"✅ Ticket créé dans Jira : **{resultat.key}** "
+                f"(HTTP {resultat.status_code})."
+                + (" — _réponse simulée, pas d'instance Jira réelle._" if resultat.simule else "")
             )
-        with col2:
-            priority = st.selectbox(
-                "Priorité", PRIORITES, index=PRIORITES.index(ticket.priority)
-            )
-        with col3:
-            story_points = st.number_input(
-                "Points", min_value=0, value=int(ticket.story_points), step=1
-            )
-
-        description = st.text_area("Description", value=ticket.description, height=200)
-
-        st.caption(f"💡 Priorité — {ticket.priority_justification}")
-        st.caption(f"💡 Estimation — {ticket.estimate_justification}")
-
-        col4, col5 = st.columns(2)
-        with col4:
-            labels = st.text_input("Labels (séparés par des virgules)", value=", ".join(ticket.labels))
-            reporter = st.text_input("Demandeur", value=ticket.reporter or "")
-            estimate_hours = st.text_input(
-                "Estimation (heures)",
-                value="" if ticket.estimate_hours is None else str(ticket.estimate_hours),
-            )
-        with col5:
-            components = st.text_input("Composants (séparés par des virgules)", value=", ".join(ticket.components))
-            assignee = st.text_input("Assigné(e) suggéré(e)", value=ticket.assignee_suggestion or "")
-            due_date = st.text_input("Échéance (AAAA-MM-JJ)", value=ticket.due_date or "")
-
-        criteres = st.text_area(
-            "Critères d'acceptation (un par ligne)",
-            value="\n".join(ticket.acceptance_criteria),
-            height=120,
-        )
-
-        if st.session_state.attachments:
-            noms_pj = ", ".join(n for n, _ in st.session_state.attachments)
-            st.markdown(f"**📎 E-mail(s) joint(s) au ticket :** {noms_pj}")
+            st.markdown(f"🔗 [Ouvrir le ticket {resultat.key}]({resultat.url})")
+            with st.expander("Détails de l'appel API Jira (payload + réponse)"):
+                st.caption(f"POST {os.getenv('JIRA_BASE_URL', 'https://votre-domaine.atlassian.net').rstrip('/')}/rest/api/3/issue")
+                st.markdown("**Payload envoyé :**")
+                st.json(resultat.payload)
+                st.markdown("**Réponse de l'API :**")
+                st.json(resultat.response)
         else:
-            st.caption("Aucun fichier e-mail à joindre (analyse de texte saisi).")
+            st.error(
+                f"❌ Échec de la création du ticket Jira (HTTP {resultat.status_code}) : "
+                f"{resultat.error}"
+            )
 
-        valider = st.form_submit_button("💾 Valider le ticket")
-
-    if valider:
-        pieces_jointes = [n for n, _ in st.session_state.attachments]
-        ticket_final = {
-            "summary": summary,
-            "issue_type": issue_type,
-            "priority": priority,
-            "story_points": int(story_points),
-            "estimate_hours": float(estimate_hours) if estimate_hours.strip() else None,
-            "description": description,
-            "labels": [l.strip() for l in labels.split(",") if l.strip()],
-            "components": [c.strip() for c in components.split(",") if c.strip()],
-            "acceptance_criteria": [c.strip() for c in criteres.splitlines() if c.strip()],
-            "reporter": reporter or None,
-            "assignee_suggestion": assignee or None,
-            "due_date": due_date or None,
-            "pieces_jointes": pieces_jointes,
-        }
-        st.success("Ticket validé. (Pas d'API Jira : exportez le ticket ci-dessous.)")
+        st.divider()
+        st.markdown("**Ticket validé (export local) :**")
         st.json(ticket_final)
 
         col_dl1, col_dl2 = st.columns(2)

@@ -4,6 +4,5 @@ langchain>=0.3
 langchain-core>=0.3
 langchain-groq>=0.2
 pydantic>=2
-pypdf>=4
 extract-msg>=0.50
 python-dotenv>=1

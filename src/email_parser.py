@@ -1,9 +1,9 @@
-"""Lecture et normalisation des pièces jointes (e-mails) déposées dans le chat.
+"""Lecture et normalisation des e-mails Outlook déposés dans le chat.
 
 Formats gérés :
-- .eml          : e-mail RFC822 (extraction En-têtes + corps texte)
-- .txt / .md    : texte brut
-- .pdf          : texte extrait via pypdf (si installé)
+- .msg          : e-mail Outlook (paquet `extract-msg`) — format natif
+- .eml          : e-mail RFC822 exporté par Outlook (En-têtes + corps texte)
+- .txt / .md    : texte brut (copier-coller d'un échange)
 - autres        : tentative de décodage UTF-8
 """
 
@@ -83,28 +83,13 @@ def _parse_msg(data: bytes, nom: str) -> str:
         return f"--- Fichier : {nom} (.msg non extrait : {exc}) ---"
 
 
-def _parse_pdf(data: bytes, nom: str) -> str:
-    try:
-        import io
-
-        from pypdf import PdfReader
-
-        lecteur = PdfReader(io.BytesIO(data))
-        pages = [page.extract_text() or "" for page in lecteur.pages]
-        return f"--- Fichier : {nom} (PDF) ---\n" + "\n".join(pages).strip()
-    except Exception as exc:  # pypdf absent ou PDF non lisible
-        return f"--- Fichier : {nom} (PDF non extrait : {exc}) ---"
-
-
 def parse_uploaded_file(nom: str, data: bytes) -> str:
     """Convertit une pièce jointe (nom + octets) en texte normalisé."""
     ext = nom.lower().rsplit(".", 1)[-1] if "." in nom else ""
-    if ext == "eml":
-        return _parse_eml(data, nom)
     if ext == "msg":
         return _parse_msg(data, nom)
-    if ext == "pdf":
-        return _parse_pdf(data, nom)
+    if ext == "eml":
+        return _parse_eml(data, nom)
     # txt, md, et tout le reste -> décodage texte
     return f"--- Fichier : {nom} ---\n" + data.decode("utf-8", errors="replace").strip()
 
