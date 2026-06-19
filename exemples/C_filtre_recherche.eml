@@ -1,0 +1,60 @@
+From: Laura Petit <laura.petit@notre-saas.fr>
+To: Thomas Roy <thomas.roy@notre-saas.fr>
+Subject: RE: =?utf-8?q?Am=C3=A9lioration_=3A_m=C3=A9moriser?= les filtres de
+ recherche
+Date: Wed, 10 Jun 2026 14:30:00 +0000
+Message-ID: <178181848022.77926.642417969169550840@exemple.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Pas de maquette, pars de l'existant, le composant de filtres actuel est
+d=C3=A9j=C3=A0 bien. L'essentiel pour les utilisateurs c'est : URL partageabl=
+e + r=C3=A9cap
+des filtres actifs. Le scroll, c'est bonus si c'est trop co=C3=BBteux.
+
+Merci Thomas, je te laisse estimer.
+
+Le 10/06/2026 =C3=A0 11:30, Thomas Roy <thomas.roy@notre-saas.fr> a =C3=A9cri=
+t :
+> Hello Laura,
+>=20
+> Bonne id=C3=A9e, c'est un classique. La m=C3=A9morisation des filtres dans =
+l'URL est
+> simple et apporte beaucoup (partage de lien, retour arri=C3=A8re). Le r=C3=
+=A9cap des
+> filtres actifs avec suppression unitaire est faisable aussi.
+>=20
+> La conservation du scroll est un peu plus d=C3=A9licate selon la pagination
+> (infinie vs pages), mais g=C3=A9rable. Je propose qu'on le mette dans le pr=
+ochain
+> sprint =C2=AB confort UX =C2=BB. Tu as des maquettes ou je pars de l'exista=
+nt ?
+>=20
+> Le 10/06/2026 =C3=A0 08:30, Laura Petit <laura.petit@notre-saas.fr> a =C3=
+=A9crit :
+> > Salut l'=C3=A9quipe,
+> >=20
+> > Petit retour d'usage remont=C3=A9 par plusieurs utilisateurs (et que je p=
+artage)
+> > sur la page de recherche du catalogue : ce n'est pas urgent, mais ce sera=
+it un
+> > vrai confort.
+> >=20
+> > Aujourd'hui, quand on applique des filtres (cat=C3=A9gorie, prix, disponi=
+bilit=C3=A9),
+> > la liste se recharge mais on perd le scroll et les filtres ne sont pas
+> > m=C3=A9moris=C3=A9s si on quitte la page puis qu'on revient. Du coup les =
+utilisateurs
+> > refont leur recherche =C3=A0 chaque fois.
+> >=20
+> > Suggestions :
+> > - m=C3=A9moriser les filtres dans l'URL (param=C3=A8tres de requ=C3=AAte)=
+ pour pouvoir
+> >   partager/recharger une recherche ;
+> > - conserver la position de scroll ;
+> > - afficher un petit r=C3=A9capitulatif des filtres actifs avec une croix =
+pour les
+> >   retirer un par un.
+> >=20
+> > Rien de bloquant, =C3=A0 caler quand vous aurez de la place. Merci !

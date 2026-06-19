@@ -1,0 +1,90 @@
+From: Support Technique <support@plateforme-paiement.fr>
+To: Sophie Marchand <sophie.marchand@retailcorp.fr>
+Subject: RE: Paiements CB en =?utf-8?q?=C3=A9chec?= en production - URGENT
+Date: Mon, 15 Jun 2026 09:28:00 +0000
+Message-ID: <178181848022.77926.1352521588855548299@exemple.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Confirmation : le certificat TLS de la passerelle 3DS partenaire a expir=C3=A9
+ce matin =C3=A0 07:42, ce qui provoque le timeout que vous observez. Le renou=
+vellement
+est en cours de d=C3=A9ploiement.
+
+R=C3=A9tablissement estim=C3=A9 : sous 45 minutes. Nous mettrons en place un =
+correctif
+d=C3=A9finitif (supervision automatique de l'expiration des certificats) pour=
+ =C3=A9viter
+toute r=C3=A9cidive. Un post-mortem d=C3=A9taill=C3=A9 vous sera transmis.
+
+Nous vous confirmons d=C3=A8s que les paiements repassent au vert.
+
+Le 15/06/2026 =C3=A0 09:05, Sophie Marchand <sophie.marchand@retailcorp.fr> a=
+ =C3=A9crit :
+> Merci pour la r=C3=A9activit=C3=A9.
+>=20
+> Voici 3 r=C3=A9f=C3=A9rences =C3=A9chou=C3=A9es : TX-8841920, TX-8841977, T=
+X-8842013.
+> Premier =C3=A9chec constat=C3=A9 =C3=A0 07:43 pr=C3=A9cis=C3=A9ment (notre =
+monitoring le confirme).
+>=20
+> Je pr=C3=A9cise que l'impact s'aggrave : nous sommes maintenant =C3=A0 plus=
+ de 2 000
+> transactions en =C3=A9chec. La direction me demande un d=C3=A9lai de r=C3=
+=A9tablissement.
+> Pouvez-vous nous donner une estimation, m=C3=AAme approximative ?
+>=20
+> Le 15/06/2026 =C3=A0 08:52, Support Technique <support@plateforme-paiement.=
+fr> a =C3=A9crit :
+> > Bonjour Madame Marchand,
+> >=20
+> > Nous prenons en charge votre incident en priorit=C3=A9 absolue (ticket in=
+terne ouvert).
+> > Nous confirmons observer un taux d'erreur anormal sur l'autorisation 3D S=
+ecure
+> > pour plusieurs marchands depuis ~7h40. Notre hypoth=C3=A8se actuelle : un=
+ certificat
+> > expir=C3=A9 sur la passerelle de l'un de nos partenaires bancaires.
+> >=20
+> > Pour avancer, pourriez-vous nous pr=C3=A9ciser :
+> > - l'identifiant de 2 ou 3 transactions =C3=A9chou=C3=A9es (referenceId) ?
+> > - la plage horaire exacte du premier =C3=A9chec constat=C3=A9 ?
+> >=20
+> > Nos =C3=A9quipes infrastructure sont mobilis=C3=A9es. Nous revenons vers =
+vous d'ici 30 min.
+> >=20
+> > Le 15/06/2026 =C3=A0 08:30, Sophie Marchand <sophie.marchand@retailcorp.f=
+r> a =C3=A9crit :
+> > > Bonjour,
+> > >=20
+> > > Nous avons un PROBL=C3=88ME CRITIQUE en production depuis ce matin 7h45=
+ : la totalit=C3=A9
+> > > des paiements par carte bancaire =C3=A9choue sur notre site marchand (e=
+nviron 1 200
+> > > transactions perdues =C3=A0 l'heure). Les clients re=C3=A7oivent le mes=
+sage =C2=AB Erreur
+> > > technique, r=C3=A9essayez plus tard =C2=BB au moment de valider leur pa=
+nier.
+> > >=20
+> > > C'est BLOQUANT, nous perdons du chiffre d'affaires en temps r=C3=A9el e=
+t notre service
+> > > client est submerg=C3=A9. Nous avons besoin d'une intervention imm=C3=
+=A9diate.
+> > >=20
+> > > Contexte :
+> > > - Aucun d=C3=A9ploiement de notre c=C3=B4t=C3=A9 depuis 4 jours.
+> > > - Les paiements PayPal et virement fonctionnent normalement.
+> > > - Seul le tunnel carte bancaire (3D Secure) est touch=C3=A9.
+> > > - Les logs c=C3=B4t=C3=A9 front affichent un timeout sur l'appel =C3=A0=
+ votre API
+> > >   /v2/payments/authorize apr=C3=A8s 30 secondes.
+> > >=20
+> > > Pouvez-vous regarder en urgence ? Je reste joignable au t=C3=A9l=C3=A9p=
+hone toute la
+> > > journ=C3=A9e. Merci de me tenir inform=C3=A9e tr=C3=A8s r=C3=A9guli=C3=
+=A8rement.
+> > >=20
+> > > Bien cordialement,
+> > > Sophie Marchand
+> > > Responsable e-commerce =E2=80=94 RetailCorp

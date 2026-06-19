@@ -1,0 +1,100 @@
+From: Karim Benali <karim.benali@financeplus.fr>
+To: =?utf-8?q?=C3=89quipe?= Produit <produit@notre-saas.fr>
+Subject: RE: Besoin : export comptable =?utf-8?q?consolid=C3=A9?=
+ multi-devises
+Date: Sun, 14 Jun 2026 10:30:00 +0000
+Message-ID: <178181848022.77926.11719691343329958131@exemple.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Merci pour le retour, r=C3=A9ponses ci-dessous :
+
+- Source des taux : la BCE est accept=C3=A9e par tous les clients concern=C3=
+=A9s. Un
+  client demande OANDA mais peut s'adapter =C3=A0 la BCE dans un premier temp=
+s.
+- FEC : la conformit=C3=A9 stricte =C3=A0 l'arr=C3=AAt=C3=A9 de 2013 est n=C3=
+=A9cessaire, c'est un point
+  dur =E2=80=94 sans cela l'export n'a pas de valeur pour eux en cas de contr=
+=C3=B4le fiscal.
+- Devise de consolidation : =C3=A0 d=C3=A9finir au niveau du compte client (p=
+aram=C3=A8tre),
+  avec possibilit=C3=A9 de surcharger ponctuellement au moment de l'export.
+
+Le d=C3=A9coupage en lots me convient. Id=C3=A9alement, une premi=C3=A8re ver=
+sion avec
+CSV + conversion =C3=A0 la date d'op=C3=A9ration + export asynchrone pour la =
+prochaine
+cl=C3=B4ture, puis le FEC conforme dans un second temps. Est-ce tenable ?
+
+Le 13/06/2026 =C3=A0 13:30, =C3=89quipe Produit <produit@notre-saas.fr> a =C3=
+=A9crit :
+> Bonjour Karim,
+>=20
+> Merci pour ce besoin tr=C3=A8s bien cadr=C3=A9. Quelques questions pour aff=
+iner :
+>=20
+> - Pour les taux de change historiques : avez-vous une source de r=C3=A9f=C3=
+=A9rence
+>   impos=C3=A9e par les clients (BCE, OANDA, taux interne) ? Cela impacte
+>   l'int=C3=A9gration d'une API de taux.
+> - Le format FEC : doit-il =C3=AAtre strictement conforme =C3=A0 l'arr=C3=AA=
+t=C3=A9 de 2013, ou une
+>   variante adapt=C3=A9e suffit-elle dans un premier temps ?
+> - La devise de consolidation est-elle d=C3=A9finie au niveau du compte clie=
+nt, ou
+>   doit-elle =C3=AAtre choisie au moment de l'export ?
+>=20
+> De notre c=C3=B4t=C3=A9, l'export asynchrone et la conversion multi-devises=
+ sont
+> r=C3=A9alisables, mais le FEC conforme et la gestion des taux historiques
+> repr=C3=A9sentent une charge non n=C3=A9gligeable. Nous penchons pour un d=
+=C3=A9coupage en
+> plusieurs lots de livraison.
+>=20
+> Le 13/06/2026 =C3=A0 08:30, Karim Benali <karim.benali@financeplus.fr> a =
+=C3=A9crit :
+> > Bonjour l'=C3=A9quipe Produit,
+> >=20
+> > Dans le cadre de notre cl=C3=B4ture trimestrielle, plusieurs de nos clien=
+ts grands
+> > comptes (dont 3 groupes internationaux) nous remontent un besoin r=C3=A9c=
+urrent que
+> > notre outil ne couvre pas encore : un export comptable consolid=C3=A9 mul=
+ti-devises.
+> >=20
+> > Le besoin en d=C3=A9tail :
+> > 1. Pouvoir exporter l'ensemble des =C3=A9critures sur une p=C3=A9riode do=
+nn=C3=A9e (mois,
+> >    trimestre, exercice) dans un fichier unique.
+> > 2. G=C3=A9rer plusieurs devises sources (EUR, USD, GBP, CHF, MAD) avec co=
+nversion
+> >    automatique vers une devise de consolidation param=C3=A9trable.
+> > 3. Appliquer le taux de change =C3=A0 la date de l'op=C3=A9ration (et non=
+ un taux unique
+> >    de fin de p=C3=A9riode) =E2=80=94 c'est une exigence r=C3=A9glementair=
+e pour certains de nos
+> >    clients.
+> > 4. Produire au minimum deux formats : CSV (pour import dans Sage/Cegid) e=
+t un
+> >    format FEC conforme =C3=A0 l'administration fiscale fran=C3=A7aise.
+> > 5. Inclure une ligne de r=C3=A9conciliation avec les =C3=A9carts de chang=
+e.
+> >=20
+> > C=C3=B4t=C3=A9 volum=C3=A9trie, certains clients ont plus de 400 000 =C3=
+=A9critures par trimestre,
+> > il faudra donc que l'export soit asynchrone (g=C3=A9n=C3=A9ration en arri=
+=C3=A8re-plan +
+> > notification quand le fichier est pr=C3=AAt), sinon le navigateur va expi=
+rer.
+> >=20
+> > Ce sujet devient prioritaire commercialement : deux renouvellements de co=
+ntrat
+> > en d=C3=A9pendent pour le trimestre prochain. Pouvez-vous estimer la fais=
+abilit=C3=A9 et
+> > nous dire ce qui est envisageable ?
+> >=20
+> > Merci d'avance,
+> > Karim Benali
+> > Customer Success Manager
